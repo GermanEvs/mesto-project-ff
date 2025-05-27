@@ -15,22 +15,14 @@ function createCard(cardData, handleDelete) {
 
   return cardElement;
 }
-
+// @todo: Функция удаления карточки
 function handleDeleteCard(cardElement) {
   cardElement.remove();
 }
-
+// @todo: DOM узлы
 const placesList = document.querySelector(".places__list");
-
+// @todo: Функция создания карточки
 initialCards.forEach((cardData) => {
   const card = createCard(cardData, handleDeleteCard);
   placesList.appendChild(card);
 });
-
-// @todo: DOM узлы
-
-// @todo: Функция создания карточки
-
-// @todo: Функция удаления карточки
-
-// @todo: Вывести карточки на страницу
