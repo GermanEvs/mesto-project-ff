@@ -1,2 +1,2 @@
 # Проектная работа Mesto
-https://github.com/GermanEvs/mesto-project-ff.git
+https://germanevs.github.io/mesto-project-ff/

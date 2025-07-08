@@ -24,3 +24,17 @@
   opacity: 0;
   transition: visibility 0s linear 0.3s, opacity 0.3s linear;
 }
+
+.popup__error {
+  color: red;
+  font-size: 12px;
+  line-height: 1.2;
+  margin-top: 5px;
+  display: block;
+}
+
+.popup__error_visible {
+  visibility: visible;
+  opacity: 1;
+}
+
