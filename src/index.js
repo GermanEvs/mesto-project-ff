@@ -7,9 +7,10 @@ import {
   deleteCard,
   updateAvatar,
 } from "./api.js";
-import { createCard, setCurrentUserId } from "./card.js";
+import { createCard } from "./card.js";
 import { openModal, closeModal } from "./modal.js";
 import { enableValidation, clearValidation } from "./validate.js";
+import { setCurrentUserId, getCurrentUserId, renderLoading } from "./utils.js";
 
 // DOM элементы
 const placesList = document.querySelector(".places__list");
@@ -50,16 +51,6 @@ const validationConfig = {
 
 enableValidation(validationConfig);
 
-// Функция изменения текста кнопки и блокировки
-function renderLoading(button, isLoading, defaultText = "Сохранить") {
-  if (isLoading) {
-    button.textContent = "Сохранение...";
-    button.disabled = true;
-  } else {
-    button.textContent = defaultText;
-    button.disabled = false;
-  }
-}
 
 // Загрузка данных пользователя и карточек
 Promise.all([getUserInfo(), getInitialCards()])
@@ -68,10 +59,11 @@ Promise.all([getUserInfo(), getInitialCards()])
     profileName.textContent = userData.name;
     profileDescription.textContent = userData.about;
 
-    cards.reverse().forEach((cardData) => {
-      const card = createCard(cardData, handleCardClick);
-      placesList.append(card);
-    });
+    // Добавляем карточки так, чтобы самые новые были сверху
+    for (let i = cards.length - 1; i >= 0; i--) {
+      const card = createCard(cards[i], getCurrentUserId(), handleCardClick, openDeleteConfirm);
+      placesList.prepend(card);
+    }
   })
   .catch((err) => console.error("Ошибка при загрузке данных:", err));
 
@@ -85,8 +77,6 @@ editButton.addEventListener("click", () => {
 
 // Открытие формы добавления карточки
 addButton.addEventListener("click", () => {
-  addForm.reset();
-  clearValidation(addForm, validationConfig);
   openModal(addModal);
 });
 
@@ -131,7 +121,7 @@ addForm.addEventListener("submit", (evt) => {
 
   addCard({ name, link })
     .then((newCard) => {
-      const card = createCard(newCard, handleCardClick);
+      const card = createCard(newCard, getCurrentUserId(), handleCardClick, openDeleteConfirm);
       placesList.prepend(card);
       closeModal(addModal);
       addForm.reset();
@@ -192,7 +182,7 @@ function handleCardClick(cardData) {
 }
 
 // Открытие попапа подтверждения удаления
-export function openDeleteConfirm(cardElement, cardId) {
+function openDeleteConfirm(cardElement, cardId) {
   cardToDelete = cardElement;
   cardIdToDelete = cardId;
   openModal(confirmModal);

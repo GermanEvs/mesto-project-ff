@@ -1,15 +1,8 @@
 // card.js — модуль для работы с карточками
 
-import { deleteCard, likeCard, unlikeCard } from "./api.js";
-import { openDeleteConfirm } from "./index.js";
+import { likeCard, unlikeCard } from "./api.js";
 
-let currentUserId = null;
-
-export function setCurrentUserId(id) {
-  currentUserId = id;
-}
-
-export function createCard(cardData, handleImageClick) {
+export function createCard(cardData, currentUserId, handleImageClick, openDeleteConfirm) {
   const template = document.querySelector("#card-template").content;
   const cardElement = template.querySelector(".card").cloneNode(true);
 
@@ -39,10 +32,7 @@ export function createCard(cardData, handleImageClick) {
   }
 
   likeButton.addEventListener("click", () => {
-    const isLiked = likeButton.classList.contains(
-      "card__like-button_is-active"
-    );
-
+    const isLiked = likeButton.classList.contains("card__like-button_is-active");
     const likeAction = isLiked ? unlikeCard : likeCard;
 
     likeAction(cardData._id)
